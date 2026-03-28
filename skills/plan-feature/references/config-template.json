@@ -1,0 +1,49 @@
+{
+  "_comment": "Copy this file to .claude/feature-planner.json in your project root and fill in your values.",
+
+  "project_name": "MyApp",
+  "project_description": "a brief description of your platform and its purpose",
+
+  "shared_library": "MyApp.Shared",
+
+  "services_overview": "Describe your platform's services, layers, and tech stack here.\nThis text is injected into the BDA agent so it understands your architecture.\n\nExample:\n  Backend services: UserService, OrderService, NotificationService\n  Frontend: Admin dashboard (Next.js), Customer portal (React/Vite)\n  Shared library: MyApp.Shared — DTOs and constants\n  Tech: Node.js, PostgreSQL, Redis, RabbitMQ",
+
+  "referenceFiles": {
+    "_comment": "Files listed here are read and inlined into matching agent prompts.",
+    "_comment2": "Paths are relative to the project root (cwd). Use 'all' to inject into every agent.",
+    "bda": [],
+    "techLead": [],
+    "pm": [],
+    "all": []
+  },
+
+  "customInstructions": {
+    "_comment": "Freetext appended to the matching agent's prompt. Leave empty string to skip.",
+    "bda": "",
+    "techLead": "",
+    "pm": "",
+    "all": ""
+  },
+
+  "repos": [
+    {
+      "name": "my-backend",
+      "role": "Backend API and services",
+      "localPath": "/path/to/my-backend",
+      "techStack": "Node.js, Express, PostgreSQL, Redis",
+      "triggers": ["Service", "API"],
+      "onboardingReferencesPath": "",
+      "referenceFiles": [],
+      "customInstructions": ""
+    },
+    {
+      "name": "my-frontend",
+      "role": "Customer-facing web app",
+      "localPath": "/path/to/my-frontend",
+      "techStack": "React, Vite, TypeScript, Tailwind CSS",
+      "triggers": ["Portal", "Frontend"],
+      "referenceFiles": [],
+      "customInstructions": ""
+    }
+  ]
+}

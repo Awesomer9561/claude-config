@@ -1,0 +1,9 @@
+{
+  "review_ttl_minutes": 10,
+  "bypass_patterns": ["WIP:", "wip:", "fixup!", "squash!"],
+  "severity_levels": {
+    "blocking": ["security", "data_loss", "breaking_change", "logic_error"],
+    "warning": ["performance", "missing_tests", "code_smell", "error_handling"],
+    "note": ["style", "readability", "suggestion", "documentation"]
+  }
+}
