@@ -51,36 +51,27 @@ Extract and hold in memory for the entire session:
 
 ## Global Output Layout
 
-All output is stored under `~/.plan-feature/{PROJECT_NAME}/`. Never inside the repo.
+All output is stored **flat** under `~/.plan-feature/{PROJECT_NAME}/`. Never inside the repo.
+No subdirectories — use descriptive filename prefixes instead.
 
 ```
 ~/.plan-feature/{PROJECT_NAME}/
-  scratch/{feature-slug}/      ← working directory for all agent files
-    stage1/
-      bda-round-N.md
-      brd.md
-    stage2/
-      techleads/
-        {repo}-round-N.md
-        {repo}-plan.md
-      qa/
-        {repo}-qa-round-N.md
-      impact-analysis.md
-    stage3/
-      pm-plan.md
-      bda-review.md
-      impact-review.md
-    session-log.md
-  plans/                       ← final deliverables
-    {filename}.md
-    {filename}-session-log.md
-  checkpoints/                 ← Mode B resume data
-    {filename}-context.md
+  {slug}-bda-round-N.md            ← Stage 1 BDA rounds
+  {slug}-brd.md                    ← Stage 1 final BRD
+  {slug}-tl-{repo}-round-N.md     ← Stage 2 Tech Lead rounds
+  {slug}-tl-{repo}-plan.md        ← Stage 2 Tech Lead final plans
+  {slug}-qa-{repo}-round-N.md     ← Stage 2 QA rounds
+  {slug}-impact-analysis.md       ← Stage 2 Impact Analysis
+  {slug}-pm-plan.md               ← Stage 3 PM plan
+  {slug}-bda-review.md            ← Stage 3 BDA review
+  {slug}-impact-review.md         ← Stage 3 Impact review
+  {slug}-session-log.md           ← Session log
+  {slug}-plan.md                  ← Final deliverable plan
+  {slug}-context.md               ← Mode B resume checkpoint
 ```
 
-Derive `{feature-slug}` from the requirement (kebab-case).
-Derive `{filename}` from `{feature-slug}` + ISO date (e.g. `order-doc-validation-2026-03-27`).
-Create directories before spawning agents.
+Derive `{slug}` from `{feature-slug}` + ISO date (e.g. `order-doc-validation-2026-03-27`, kebab-case).
+Do NOT create subdirectories — all files go directly in `~/.plan-feature/{PROJECT_NAME}/`.
 
 ---
 
@@ -113,7 +104,7 @@ writes summary plan directly from Tech Lead output.
 
 Ask user: **"What's on your mind?"** Wait for response.
 
-Derive `{feature-slug}`. Create `~/.plan-feature/{PROJECT_NAME}/scratch/{feature-slug}/stage1/`.
+Derive `{slug}` (feature-slug + ISO date). All files go in `~/.plan-feature/{PROJECT_NAME}/`.
 Write session log header + first entry.
 
 ### Step 1.2 — Spawn BDA Agent
@@ -138,7 +129,7 @@ After BDA returns:
 | Status | Action |
 |--------|--------|
 | `IN_PROGRESS` | Append log entry. Re-spawn BDA with same scratchpad path (it reads its own round logs). |
-| `COMPLETE` | Read `stage1/brd.md`. Store key fields for orchestrator use. Append log. Advance to Stage 2. |
+| `COMPLETE` | Read `{slug}-brd.md`. Store key fields for orchestrator use. Append log. Advance to Stage 2. |
 | `FAILED` | Append failure log. Tell user what was unresolved. **End session.** |
 
 Orchestrator fields to extract from BRD (for routing decisions only — do not load full BRD):
@@ -156,7 +147,7 @@ From `BRD.AFFECTED_SERVICES_AND_BFFS`, identify affected repos using `config.rep
 - A repo is included if ANY of its triggers appears as a substring in any BRD item
 - Multiple repos can match the same BRD item
 
-Check fast path condition. Create `stage2/techleads/` and `stage2/qa/` directories.
+Check fast path condition.
 
 ### Step 2.2 — Spawn Tech Lead Agents
 
@@ -245,7 +236,7 @@ Pass scratchpad path + `{PROJECT_NAME}`.
 
 ### Step 3.3 — Fast Path Summary (Fast Path Only)
 
-Read `stage2/techleads/{repo}-plan.md`. Present directly as the implementation plan.
+Read `{slug}-tl-{repo}-plan.md`. Present directly as the implementation plan.
 No PM agent. No consensus check.
 
 ### Step 3.4 — Present and Save
@@ -253,7 +244,7 @@ No PM agent. No consensus check.
 **IMPORTANT: Always display the full plan inline in the chat.** The user must be able to review
 the complete plan directly in the conversation without opening any files.
 
-1. Read the final plan file (`stage3/pm-plan.md` for Full Path, or `stage2/techleads/{repo}-plan.md`
+1. Read the final plan file (`{slug}-pm-plan.md` for Full Path, or `{slug}-tl-{repo}-plan.md`
    for Fast Path).
 2. Output the plan **verbatim** in the chat — the full markdown content, not a summary.
 3. Frame it with the status header and file paths below.
@@ -273,17 +264,15 @@ what gets saved to the plan file. Do NOT summarize, abbreviate, or paraphrase.}
 
 ---
 
-Plan:       ~/.plan-feature/{PROJECT_NAME}/plans/{filename}.md
-Log:        ~/.plan-feature/{PROJECT_NAME}/plans/{filename}-session-log.md
-Checkpoint: ~/.plan-feature/{PROJECT_NAME}/checkpoints/{filename}-context.md
-Scratchpad: ~/.plan-feature/{PROJECT_NAME}/scratch/{feature-slug}/
+Plan:       ~/.plan-feature/{PROJECT_NAME}/{slug}-plan.md
+Log:        ~/.plan-feature/{PROJECT_NAME}/{slug}-session-log.md
+Checkpoint: ~/.plan-feature/{PROJECT_NAME}/{slug}-context.md
 ```
 
-Save plan to `~/.plan-feature/{PROJECT_NAME}/plans/{filename}.md`.
-Write context checkpoint to `~/.plan-feature/{PROJECT_NAME}/checkpoints/{filename}-context.md`
+Save plan to `~/.plan-feature/{PROJECT_NAME}/{slug}-plan.md`.
+Write context checkpoint to `~/.plan-feature/{PROJECT_NAME}/{slug}-context.md`
 (format: schema v2 front-matter + sections: BRD, REPO_PLANS, IMPACT_ANALYSIS_REPORT, PM_PLAN,
-REVIEW_CONSENSUS, SESSION_LOG — all verbatim from scratchpad files).
-Copy session log to `~/.plan-feature/{PROJECT_NAME}/plans/{filename}-session-log.md`.
+REVIEW_CONSENSUS, SESSION_LOG — all verbatim from working files in the same directory).
 
 ---
 
@@ -294,7 +283,7 @@ Triggered by: PM blockers (Step 3.1) or major deviation detected (Step 2.3) or M
 Rules:
 - Round counter **resets to 1**. Max **3 rounds** (not 5 — scope is narrower).
 - Existing BRD + trigger description passed to BDA as starting context.
-- BDA writes updated `stage1/brd-v2.md` (or v3, etc.).
+- BDA writes updated `{slug}-brd-v2.md` (or v3, etc.).
 - If 3 rounds exhausted unresolved → session fails.
 - If resolved → Stage 2 re-runs for affected repos only. Stage 3 re-runs.
 
@@ -306,7 +295,7 @@ major deviation. One additional UI component or notification service = within ±
 
 ## Session Log
 
-**Location:** `~/.plan-feature/{PROJECT_NAME}/scratch/{feature-slug}/session-log.md`
+**Location:** `~/.plan-feature/{PROJECT_NAME}/{slug}-session-log.md`
 
 Orchestrator appends one row after every sub-step. Never rewrites. Header written once at start.
 
@@ -328,7 +317,7 @@ Example rows:
 | 2 | Impact Analysis | 2026-03-27T10:14Z | PASS | 6/6 FRs covered |
 | 3 | PM Plan | 2026-03-27T10:16Z | READY | 3 phases, 4 contracts, TLD: yes |
 | 3 | Consensus | 2026-03-27T10:17Z | APPROVED | BDA: approved, Impact: approved |
-| 3 | Presented | 2026-03-27T10:17Z | COMPLETE | ~/.plan-feature/ProBuy/plans/order-doc-validation-2026-03-27.md |
+| 3 | Presented | 2026-03-27T10:17Z | COMPLETE | ~/.plan-feature/ProBuy/order-doc-validation-2026-03-27-plan.md |
 ```
 
 Failure/deviation rows:
@@ -345,9 +334,9 @@ Failure/deviation rows:
 Triggered when user references a plan by name.
 
 Load:
-1. `~/.plan-feature/{PROJECT_NAME}/plans/{filename}.md`
-2. `~/.plan-feature/{PROJECT_NAME}/checkpoints/{filename}-context.md`
-3. `~/.plan-feature/{PROJECT_NAME}/plans/{filename}-session-log.md` (show last 5 entries)
+1. `~/.plan-feature/{PROJECT_NAME}/{slug}-plan.md`
+2. `~/.plan-feature/{PROJECT_NAME}/{slug}-context.md`
+3. `~/.plan-feature/{PROJECT_NAME}/{slug}-session-log.md` (show last 5 entries)
 
 Present:
 ```

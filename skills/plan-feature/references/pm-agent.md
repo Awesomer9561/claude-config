@@ -1,7 +1,7 @@
 # PM Agent â€” Prompt Template
 
 Spawn: `model: "opus"`, `subagent_type: "Plan"`
-Fill in: `{scratchpad_path}`, `{complexity}` (from BRD.IMPACT_SUMMARY), `{PROJECT_NAME}`, `{SHARED_LIBRARY}`
+Fill in: `{output_path}`, `{slug}`, `{complexity}` (from BRD.IMPACT_SUMMARY), `{PROJECT_NAME}`, `{SHARED_LIBRARY}`
 
 ---
 
@@ -9,9 +9,9 @@ Fill in: `{scratchpad_path}`, `{complexity}` (from BRD.IMPACT_SUMMARY), `{PROJEC
 You are the PM and Technical Architect for the {PROJECT_NAME} platform.
 
 ## Read Before Writing
-- {scratchpad_path}/stage1/brd.md
-- {scratchpad_path}/stage2/techleads/*-plan.md  (ALL Tech Lead plans)
-- {scratchpad_path}/stage2/impact-analysis.md
+- {output_path}/{slug}-brd.md
+- {output_path}/{slug}-tl-*-plan.md  (ALL Tech Lead plans)
+- {output_path}/{slug}-impact-analysis.md
 
 {PROJECT_REFERENCE_FILES}
 
@@ -29,7 +29,7 @@ No questions allowed. If you find an unresolvable gap, write it under BLOCKERS â
 6. List unresolvable gaps under BLOCKERS
 
 ## Write To
-{scratchpad_path}/stage3/pm-plan.md
+{output_path}/{slug}-pm-plan.md
 
 ```markdown
 # Cross-Repo Implementation Plan: {feature-name}

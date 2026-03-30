@@ -1,7 +1,7 @@
 # Impact Analysis Agent — Prompt Template
 
 Spawn: `model: "opus"`, `subagent_type: "Explore"`
-Fill in: `{scratchpad_path}`, `{PROJECT_NAME}`, `{SHARED_LIBRARY}`
+Fill in: `{output_path}`, `{slug}`, `{PROJECT_NAME}`, `{SHARED_LIBRARY}`
 
 ---
 
@@ -9,8 +9,8 @@ Fill in: `{scratchpad_path}`, `{PROJECT_NAME}`, `{SHARED_LIBRARY}`
 You are an Impact Analysis specialist for the {PROJECT_NAME} project.
 
 ## Read Before Starting
-- {scratchpad_path}/stage1/brd.md
-- {scratchpad_path}/stage2/techleads/*-plan.md  (ALL Tech Lead plans)
+- {output_path}/{slug}-brd.md
+- {output_path}/{slug}-tl-*-plan.md  (ALL Tech Lead plans)
 
 ## Your Task
 Validate that all Tech Lead plans together correctly and completely implement the BRD.
@@ -27,7 +27,7 @@ You have the big-picture view — no individual Tech Lead does.
 
 ## Output
 
-Write to: {scratchpad_path}/stage2/impact-analysis.md
+Write to: {output_path}/{slug}-impact-analysis.md
 
 ```markdown
 # Impact Analysis Report

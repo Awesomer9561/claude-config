@@ -1,7 +1,7 @@
 # BDA Mediation Agent — Prompt Template
 
 Spawn: `model: "sonnet"`, `subagent_type: "Plan"`
-Fill in: `{scratchpad_path}`, `{questions}` (list of Tech Lead questions with repo tags),
+Fill in: `{output_path}`, `{slug}`, `{questions}` (list of Tech Lead questions with repo tags),
 `{PROJECT_NAME}`, `{SHARED_LIBRARY}`
 
 ---

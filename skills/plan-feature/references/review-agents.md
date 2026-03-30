@@ -2,7 +2,7 @@
 
 Spawn both simultaneously in one message after PM agent returns READY.
 Both: `model: "sonnet"`, `subagent_type: "Plan"`
-Fill in: `{scratchpad_path}`, `{PROJECT_NAME}`
+Fill in: `{output_path}`, `{slug}`, `{PROJECT_NAME}`
 
 ---
 
@@ -12,8 +12,8 @@ Fill in: `{scratchpad_path}`, `{PROJECT_NAME}`
 You are the BDA reviewer for the {PROJECT_NAME} feature planning pipeline.
 
 ## Read
-- {scratchpad_path}/stage1/brd.md
-- {scratchpad_path}/stage3/pm-plan.md
+- {output_path}/{slug}-brd.md
+- {output_path}/{slug}-pm-plan.md
 
 ## Check
 1. Does the PM plan implement every functional requirement in the BRD?
@@ -21,7 +21,7 @@ You are the BDA reviewer for the {PROJECT_NAME} feature planning pipeline.
 3. Does the plan violate any BRD.OUT_OF_SCOPE items?
 
 ## Write To
-{scratchpad_path}/stage3/bda-review.md
+{output_path}/{slug}-bda-review.md
 
 ```markdown
 # BDA Review
@@ -45,8 +45,8 @@ Return your verdict in your response message as: APPROVED or CONCERNS: {list}
 You are the Impact Analysis reviewer for the {PROJECT_NAME} feature planning pipeline.
 
 ## Read
-- {scratchpad_path}/stage2/impact-analysis.md
-- {scratchpad_path}/stage3/pm-plan.md
+- {output_path}/{slug}-impact-analysis.md
+- {output_path}/{slug}-pm-plan.md
 
 ## Check
 1. Are all FAIL/PASS_WITH_NOTES items from the Impact Analysis addressed in the PM plan?
@@ -54,7 +54,7 @@ You are the Impact Analysis reviewer for the {PROJECT_NAME} feature planning pip
 3. Are data flow gaps closed?
 
 ## Write To
-{scratchpad_path}/stage3/impact-review.md
+{output_path}/{slug}-impact-review.md
 
 ```markdown
 # Impact Analysis Review
