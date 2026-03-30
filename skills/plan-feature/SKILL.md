@@ -250,6 +250,14 @@ No PM agent. No consensus check.
 
 ### Step 3.4 — Present and Save
 
+**IMPORTANT: Always display the full plan inline in the chat.** The user must be able to review
+the complete plan directly in the conversation without opening any files.
+
+1. Read the final plan file (`stage3/pm-plan.md` for Full Path, or `stage2/techleads/{repo}-plan.md`
+   for Fast Path).
+2. Output the plan **verbatim** in the chat — the full markdown content, not a summary.
+3. Frame it with the status header and file paths below.
+
 Present to user:
 ```
 ## {feature-name} — Implementation Plan Ready
@@ -258,7 +266,12 @@ Stage 1: BRD finalized after {N} round(s)
 Stage 2: {repos} planned | Impact: {verdict or "Fast Path"}
 Stage 3: {PM or "Fast Path"} | BDA review: {status} | Impact review: {status}
 
-{Full plan}
+---
+
+{Verbatim content of the final plan file — output the ENTIRE plan markdown here, identical to
+what gets saved to the plan file. Do NOT summarize, abbreviate, or paraphrase.}
+
+---
 
 Plan:       ~/.plan-feature/{PROJECT_NAME}/plans/{filename}.md
 Log:        ~/.plan-feature/{PROJECT_NAME}/plans/{filename}-session-log.md
