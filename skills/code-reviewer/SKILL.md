@@ -71,17 +71,25 @@ Refer to `~/.claude/code-reviewer/config.json` for severity classification rules
 
 ### Phase 4: Gate Decision
 
+**CRITICAL — Getting the timestamp right:**
+Before writing `review-status.json` or `history.jsonl`, you MUST run:
+```bash
+date +%s000
+```
+Capture the output and use that exact value as the `timestamp` field. Do NOT calculate, estimate, or hardcode the epoch — always get it from this shell command. The hook compares this against `Date.now()` to check TTL, so a wrong value will reject the commit as expired.
+
 **If BLOCKING issues found:**
-1. Write review status to `~/.claude/code-reviewer/projects/{project-id}/review-status.json`:
+1. Run `date +%s000` via Bash to get the current epoch milliseconds
+2. Write review status to `~/.claude/code-reviewer/projects/{project-id}/review-status.json`:
    ```json
    {
      "status": "failed",
-     "timestamp": <Date.now()>,
+     "timestamp": <output from date +%s000>,
      "findings": { "blocking": <count>, "warnings": <count>, "notes": <count> },
      "files_reviewed": [<list of files>]
    }
    ```
-2. Present findings in this format:
+3. Present findings in this format:
    ```
    ## Review Results: FAILED
 
@@ -97,26 +105,27 @@ Refer to `~/.claude/code-reviewer/config.json` for severity classification rules
 
    Fix the blocking issues and run review again.
    ```
-3. **STOP. Do NOT proceed to commit.**
+4. **STOP. Do NOT proceed to commit.**
 
 **If no BLOCKING issues:**
-1. Write review status:
+1. Run `date +%s000` via Bash to get the current epoch milliseconds
+2. Write review status:
    ```json
    {
      "status": "passed",
-     "timestamp": <Date.now()>,
+     "timestamp": <output from date +%s000>,
      "findings": { "blocking": 0, "warnings": <count>, "notes": <count> },
      "files_reviewed": [<list of files>]
    }
    ```
-2. Present any warnings/notes as informational
-3. Proceed to commit the changes using the standard commit flow
+3. Present any warnings/notes as informational
+4. Proceed to commit the changes using the standard commit flow
 
 ### Phase 5: Log
 
-Append a one-line JSON entry to `~/.claude/code-reviewer/projects/{project-id}/history.jsonl`:
+Run `date +%s000` if not already captured in this phase. Append a one-line JSON entry to `~/.claude/code-reviewer/projects/{project-id}/history.jsonl`:
 ```json
-{"timestamp": <epoch>, "status": "passed|failed", "files": <count>, "blocking": <n>, "warnings": <n>, "notes": <n>}
+{"timestamp": <output from date +%s000>, "status": "passed|failed", "files": <count>, "blocking": <n>, "warnings": <n>, "notes": <n>}
 ```
 
 ## Important Rules
