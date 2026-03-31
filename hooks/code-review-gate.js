@@ -10,7 +10,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 const { execSync } = require('child_process');
 
 // ── Config defaults (overridden by ~/.claude/code-reviewer/config.json) ──
@@ -38,24 +37,14 @@ try {
 
 function getProjectId(cwd) {
   try {
-    const remote = execSync('git remote get-url origin', {
+    const root = execSync('git rev-parse --show-toplevel', {
       cwd,
       encoding: 'utf8',
       stdio: ['pipe', 'pipe', 'pipe']
     }).trim();
-    return crypto.createHash('sha256').update(remote).digest('hex').slice(0, 12);
+    return path.basename(root);
   } catch (_) {
-    // No git remote — fall back to repo root path hash
-    try {
-      const root = execSync('git rev-parse --show-toplevel', {
-        cwd,
-        encoding: 'utf8',
-        stdio: ['pipe', 'pipe', 'pipe']
-      }).trim();
-      return crypto.createHash('sha256').update(root).digest('hex').slice(0, 12);
-    } catch (__) {
-      return null;
-    }
+    return null;
   }
 }
 

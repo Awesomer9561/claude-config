@@ -18,9 +18,9 @@ A stack-agnostic code review skill that enforces quality gates before commits. W
 
 ### Phase 1: Project Detection
 
-1. Run `git remote get-url origin` to get the remote URL
-2. Compute the project ID: first 12 characters of SHA-256 hash of the remote URL
-3. Check if a profile exists at `~/.claude/code-reviewer/projects/{project-id}/profile.md`
+1. Run `git rev-parse --show-toplevel` to get the repo root path
+2. Derive the project name from the repo's folder name (basename of the repo root)
+3. Check if a profile exists at `~/.claude/code-reviewer/projects/{repo-folder-name}/profile.md`
 4. If no profile exists, run the **Init Flow** (Phase 1b) before proceeding
 5. If profile exists, read it and load it as context for the review
 
@@ -37,7 +37,7 @@ When no profile exists for this project, tell the user: "No project profile foun
 - Test files: identify test framework, naming patterns, test location
 - Recent history: `git log --oneline -20` to learn commit style
 
-**Generate a profile** at `~/.claude/code-reviewer/projects/{project-id}/profile.md` following the template at `~/.claude/skills/code-reviewer/references/profile-template.md`.
+**Generate a profile** at `~/.claude/code-reviewer/projects/{repo-folder-name}/profile.md` following the template at `~/.claude/skills/code-reviewer/references/profile-template.md`.
 
 **Present the profile** to the user and ask: "Here's what I learned about this project. Anything to adjust?"
 
@@ -80,7 +80,7 @@ Capture the output and use that exact value as the `timestamp` field. Do NOT cal
 
 **If BLOCKING issues found:**
 1. Run `date +%s000` via Bash to get the current epoch milliseconds
-2. Write review status to `~/.claude/code-reviewer/projects/{project-id}/review-status.json`:
+2. Write review status to `~/.claude/code-reviewer/projects/{repo-folder-name}/review-status.json`:
    ```json
    {
      "status": "failed",
@@ -123,7 +123,7 @@ Capture the output and use that exact value as the `timestamp` field. Do NOT cal
 
 ### Phase 5: Log
 
-Run `date +%s000` if not already captured in this phase. Append a one-line JSON entry to `~/.claude/code-reviewer/projects/{project-id}/history.jsonl`:
+Run `date +%s000` if not already captured in this phase. Append a one-line JSON entry to `~/.claude/code-reviewer/projects/{repo-folder-name}/history.jsonl`:
 ```json
 {"timestamp": <output from date +%s000>, "status": "passed|failed", "files": <count>, "blocking": <n>, "warnings": <n>, "notes": <n>}
 ```
@@ -140,7 +140,7 @@ Run `date +%s000` if not already captured in this phase. Append a one-line JSON 
 
 ## Profile Management
 
-- Profiles live at `~/.claude/code-reviewer/projects/{project-id}/profile.md`
+- Profiles live at `~/.claude/code-reviewer/projects/{repo-folder-name}/profile.md`
 - Users can manually edit profiles to add custom rules
 - To re-init a project profile, delete the file and run review again
 - Profiles should be updated when major conventions change (user can ask "update project profile")
