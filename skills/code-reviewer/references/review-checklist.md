@@ -48,9 +48,11 @@ Apply these checks to every changed file. Severity classification follows `~/.cl
 - [ ] **Missing error context**: Exceptions re-thrown without context/message
 - [ ] **Unhandled edge cases**: No handling for empty collections, null returns, timeouts
 
-## 6. Testing (WARNING)
+## 6. Testing (BLOCKING for major changes)
 
-- [ ] **New logic without tests**: Significant new business logic with no test coverage
+- [ ] **New logic without tests**: Any major code change (new features, service methods, handlers, significant logic changes) MUST have unit tests — this is BLOCKING
+- [ ] **Unit tests pass**: Run `dotnet test ServiceName.UnitTests --verbosity normal` for all affected services — failing tests are BLOCKING. NEVER run e2e tests, only *.UnitTests projects
+- [ ] **Test coverage**: New business logic should cover happy path + at least one error/edge case
 - [ ] **Broken test patterns**: Tests that don't actually assert anything meaningful
 - [ ] **Test-only code in production**: Test utilities or mocks in production code paths
 
