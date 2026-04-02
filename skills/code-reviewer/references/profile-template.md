@@ -16,6 +16,7 @@
 - **Caching:** {e.g., Redis, In-memory}
 - **Test Framework:** {e.g., xUnit + Moq, Jest, pytest}
 - **Build Tool:** {e.g., dotnet CLI, npm/yarn, Poetry}
+- **Build Command:** {e.g., npm run build, dotnet build, go build ./..., cargo build, make build}
 
 ## Architecture
 

@@ -35,6 +35,7 @@ When no profile exists for this project, tell the user: "No project profile foun
 - Project instructions: `CLAUDE.md`, `README.md`, `.cursor/rules`, `.github/CONTRIBUTING.md`
 - Sample source files: read 3-5 representative files from the main source directory
 - Test files: identify test framework, naming patterns, test location
+- Build command: check `package.json` scripts (`build`), `Makefile`, `*.csproj`/`*.sln`, `go.mod`, `Cargo.toml`, `pom.xml`, `build.gradle` to determine the project's build command
 - Recent history: `git log --oneline -20` to learn commit style
 
 **Generate a profile** at `~/.claude/code-reviewer/projects/{repo-folder-name}/profile.md` following the template at `~/.claude/skills/code-reviewer/references/profile-template.md`.
@@ -57,6 +58,20 @@ For each changed file:
 - For large files (>500 lines), read the changed sections with surrounding context
 
 If no changes are found, inform the user and stop.
+
+### Phase 2b: Build
+
+Before reviewing, build the project to catch compilation and type errors early.
+
+1. Read the project profile's **Build Command** field
+2. Run the build command at the repo root
+3. **If the build fails:**
+   - Treat build errors as BLOCKING findings
+   - Run `date +%s000` via Bash to get the current epoch milliseconds
+   - Write a failed `review-status.json` with `"status": "failed"` and the build error details
+   - Present the build errors to the user: "Build failed. Fix build errors before review can proceed."
+   - **STOP. Do NOT proceed to review or commit.**
+4. **If the build succeeds:** proceed to Phase 3
 
 ### Phase 3: Review
 
