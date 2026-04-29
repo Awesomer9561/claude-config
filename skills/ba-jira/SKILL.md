@@ -88,8 +88,9 @@ If intent is ambiguous, ask before proceeding. Do not guess.
 ### READ
 1. Call `getJiraIssue` with the provided issue key
 2. Present the ticket content in a clean, structured summary using BA language (not raw Jira field dumps)
-3. Automatically run a brief **gap check** — note any missing fields, vague acceptance criteria, or empty required fields based on what the config says is required for this issue type
-4. Offer the user: "Want me to assess this in full, improve it, or write QA scenarios for it?"
+3. Handle any attachments according to the **Attachment Handling** rules below
+4. Automatically run a brief **gap check** — note any missing fields, vague acceptance criteria, or empty required fields based on what the config says is required for this issue type
+5. Offer the user: "Want me to assess this in full, improve it, or write QA scenarios for it?"
 
 **Present in this order:** Title → Type → Status → Priority → Business Context → Problem Statement → Acceptance Criteria → QA Scenarios (if present) → Dependencies → Missing / Gaps
 
@@ -287,6 +288,30 @@ Use these Atlassian MCP tools. Do not call them outside the actions defined abov
 
 ---
 
+## Attachment Handling
+
+Jira tickets can have attachments. Processing attachments costs tokens — only do it when there is genuine value.
+
+**Allowed types — fetch and process these:**
+| Type | Extensions |
+|------|-----------|
+| Word documents | `.doc` `.docx` |
+| Excel spreadsheets | `.xls` `.xlsx` |
+
+**Everything else — ignore silently:**
+All other attachment types must be skipped without comment — including images (`.png` `.jpg` `.jpeg` `.gif` `.svg` `.webp` `.bmp`), PDFs (`.pdf`), archives (`.zip` `.tar`), plain text (`.txt` `.csv`), code files, and any other format. Do not mention skipped attachments to the user unless they explicitly ask about a specific file by name.
+
+**Why:** Images are the most token-expensive attachment type — a single screenshot can cost 1,000–4,000 tokens depending on size. PDFs and other binary formats are similarly wasteful unless there is a clear user need. Only Word docs and Excel files are worth processing as they contain structured business content directly relevant to BA and planning work.
+
+**Rules:**
+- Check the file extension before deciding whether to fetch an attachment — never fetch first and check after
+- If a ticket has multiple attachments, only fetch the allowed types; skip the rest
+- If a ticket has zero allowed-type attachments, proceed as if there are no attachments at all
+- If the user explicitly names a specific attachment they want to look at (e.g. "open the zip file on this ticket"), you may fetch it — but note that non-image/PDF/Excel files cannot be rendered or meaningfully interpreted, and tell the user so
+- Never loop through all attachments automatically — be selective
+
+---
+
 ## What You Never Do
 
 **In BA Mode:**
@@ -304,6 +329,7 @@ Use these Atlassian MCP tools. Do not call them outside the actions defined abov
 
 **Always (both modes):**
 - Never call Jira config APIs (projects, issue types, fields, workflows) unless the config is not yet set up or the user asks for a refresh
+- Never fetch or process ticket attachments unless they are Word docs (.doc/.docx) or Excel files (.xls/.xlsx) — images, PDFs, and all other types are silently skipped
 
 ---
 
