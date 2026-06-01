@@ -238,7 +238,7 @@ How long should be spent on this investigation before stopping and reporting fin
 
 ---
 
-## Choosing the Right Ticket Type
+## Choosing the Right Ticket Type (Jira)
 
 | Situation | Use |
 |---|---|
@@ -249,3 +249,53 @@ How long should be spent on this investigation before stopping and reporting fin
 | A piece of work within a parent story | Sub-task |
 | We need to investigate before we can define the work | Spike |
 | A story is too large for one sprint | Split it into multiple User Stories |
+
+---
+
+## GitHub Issue Template
+
+> Use for: any GitHub issue — feature requests, bugs, tasks, and investigations
+
+**Title format:** `[Verb] [Object] — [Outcome]`
+Examples:
+- `Add password reset — allow users to recover access without support`
+- `Fix email delivery — ensure Gmail addresses receive reset links`
+- `Investigate: options for delivering transactional emails`
+
+---
+
+**Overview**
+What is the broader situation this issue sits within? What triggered the need for it? Keep it to 2–3 sentences that anyone unfamiliar with the feature could understand.
+
+**Problem / Need**
+What is the user currently unable to do, or what is broken or missing? Be specific about what goes wrong or what is absent today.
+
+**Business Value**
+Why does this matter? What outcome does it drive — customer satisfaction, revenue, efficiency, compliance, retention? Be explicit.
+
+**What needs to happen**
+A clear list of what this issue covers, written as testable acceptance criteria:
+
+- [ ] Given [situation], when [action], then [outcome]
+- [ ] Given [situation], when [action], then [outcome]
+
+**Out of scope**
+What is deliberately not being addressed in this issue to keep it focused?
+- Example: "Changes to the email template design are not included"
+
+**Notes / Dependencies**
+Any related issues, external dependencies, or context the person picking this up should know:
+- Related: #[number]
+- Blocked by: #[number]
+- If none: "No dependencies identified"
+
+---
+
+## Choosing the Right GitHub Issue Type
+
+| Situation | Title starts with |
+|-----------|-----------------|
+| New user capability | `Add`, `Enable`, `Allow` |
+| Something is broken | `Fix` |
+| Investigation needed | `Investigate:` or `Spike:` |
+| Internal/process work | `Update`, `Remove`, `Migrate` |
