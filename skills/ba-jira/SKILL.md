@@ -1,6 +1,6 @@
 ---
 name: ba-jira
-description: Senior BA skill for all Jira work item interactions — including a Planner mode that turns tickets into executable code implementation plans. ALWAYS use this skill whenever the user mentions any Jira ticket, work item, user story, bug, epic, task, subtask, or any Jira issue key (e.g. ABC-123, PROJ-456). Triggers on BA phrases like "show me this ticket", "read ticket", "write a story", "create a bug", "create a Jira issue", "assess this ticket", "review this work item", "is this sprint ready", "break down this epic", "improve this ticket", "write acceptance criteria", "write AC", "create QA scenarios", "score this ticket", "rewrite this ticket". Triggers on Planner phrases like "plan this ticket", "implement this ticket", "build this", "plan the implementation for", "what do I need to change for", "create an implementation plan for", "plan [ticket-key]", "implement [ticket-key]". Claude must NEVER directly access Jira or write/modify Jira work items without going through this skill.
+description: Senior BA skill for all Jira work item interactions — including a Planner mode that turns tickets into executable code implementation plans. ALWAYS use this skill whenever the user mentions any Jira ticket, work item, user story, bug, epic, task, subtask, or any Jira issue key (e.g. ABC-123, PROJ-456). Triggers on BA phrases like "show me this ticket", "read ticket", "write a story", "create a bug", "create a Jira issue", "assess this ticket", "review this work item", "is this sprint ready", "break down this epic", "improve this ticket", "write acceptance criteria", "write AC", "create QA scenarios", "score this ticket", "rewrite this ticket". Triggers on Planner phrases like "plan this ticket", "implement this ticket", "build this", "plan the implementation for", "what do I need to change for", "create an implementation plan for", "plan [ticket-key]", "implement [ticket-key]". Triggers on Summary phrases like "summarise what was done", "write an implementation summary", "add a summary comment", "document what was built", "post a summary to [ticket-key]", "summarise [ticket-key]". Claude must NEVER directly access Jira or write/modify Jira work items without going through this skill.
 ---
 
 # Senior BA — Jira Work Item Skill
@@ -78,6 +78,7 @@ Based on the user's request, route to the correct action:
 | "plan this ticket / implement / build [ticket-key]" | → **PLAN** |
 | "what do I need to change for [ticket-key]?" | → **PLAN** |
 | "create an implementation plan for [ticket-key]" | → **PLAN** |
+| "summarise / document what was done / built for [ticket-key]" | → **SUMMARISE** |
 
 If intent is ambiguous, ask before proceeding. Do not guess.
 
@@ -197,6 +198,60 @@ Read `references/qa-scenario-guide.md` before writing scenarios.
 4. Show proposed changes clearly
 5. On confirmation, call `editJiraIssue`
 6. Confirm update with the user
+
+---
+
+### SUMMARISE *(Implementation Summary Mode)*
+
+You write a business-oriented summary of what was implemented for a ticket and post it as a Jira comment. The audience is stakeholders, product owners, and QA — not engineers. The summary must read like a release note or handover note, not a technical changelog.
+
+Read `references/ba-principles.md` before composing the comment — the same language rules apply here as in ticket writing.
+
+#### Process
+
+1. **Load the ticket** — call `getJiraIssue` to understand the original business requirement and acceptance criteria. If no ticket key is provided, ask for one.
+
+2. **Gather what was built** — if the user hasn't already described it, ask:
+   > "What was delivered? Describe what changed from a user's perspective — what can users now do that they couldn't before, or what was fixed?"
+   If they've described it in their message, use that. Do not ask again.
+
+3. **Compose the summary** — write the comment using the template below. Apply strict BA language rules — no technical jargon.
+
+4. **Show for review** — display the full comment before posting. Ask:
+   > "Shall I post this to [ticket-key]?"
+
+5. **Post to Jira** — on confirmation, call `addCommentToJiraIssue` with the composed text.
+
+#### Summary Comment Template
+
+```
+## ✅ Implementation Summary
+
+**Ticket:** [KEY] — [Title]
+**Summary date:** [Today's date]
+
+---
+
+### What was delivered
+
+[2–4 sentences in plain English describing what the user can now do, what was fixed, or what changed. Written from the perspective of the end user or business. No code references, no API names, no database terms.]
+
+### What to verify
+
+[Bullet list of 2–5 things a QA tester or stakeholder should check to confirm the change is working. Written as actions: "Navigate to X and confirm Y appears", "Try doing Z and check that the error message shows…". No technical steps.]
+
+### Scope of change
+
+[One sentence on what was deliberately left unchanged or out of scope, if relevant. Omit this section entirely if everything in the ticket was delivered.]
+```
+
+#### Language Rules (SUMMARISE mode)
+
+- ✅ Say "users can now…", "the screen now shows…", "clicking [button] now…"
+- ✅ Say "this was fixed", "this behaviour was corrected", "the form now validates…"
+- ❌ Never say: API, endpoint, database, query, migration, deployment, service, component, function, branch, PR, merge, commit, schema, payload, backend, frontend, refactor
+- ❌ Never reference file names, class names, or library names
+- ❌ Never describe *how* something was built — only *what* changed and *what to verify*
 
 ---
 
@@ -320,6 +375,7 @@ All other attachment types must be skipped without comment — including images 
 - Never assume missing context — always ask before writing
 - Never update or create tickets in Jira without showing the user the content first and getting confirmation
 - Never use jargon — see `references/ba-principles.md` for the banned list and business-language replacements
+- Never write implementation summaries that contain technical details — SUMMARISE is business-language only, the same as ticket writing
 
 **In Planner Mode:**
 - Never make code changes without the user first confirming the plan
@@ -330,6 +386,10 @@ All other attachment types must be skipped without comment — including images 
 **Always (both modes):**
 - Never call Jira config APIs (projects, issue types, fields, workflows) unless the config is not yet set up or the user asks for a refresh
 - Never fetch or process ticket attachments unless they are Word docs (.doc/.docx) or Excel files (.xls/.xlsx) — images, PDFs, and all other types are silently skipped
+- Never perform any action that is not explicitly defined in the **Actions** section above — the only valid actions are READ, WRITE, ASSESS, REWRITE, DECOMPOSE, SPRINT READINESS, QA SCENARIOS, UPDATE, PLAN, and SUMMARISE
+- Never invent, guess, or extrapolate content — if the information needed to complete an action is not present in the ticket, the codebase, or what the user has said, ask for it explicitly
+- Never call a Jira MCP tool not listed in the **Jira MCP Tool Reference** table
+- If you are unsure which action the user wants, ask before doing anything — do not default to the closest guess and proceed
 
 ---
 
@@ -343,5 +403,5 @@ Load these when performing the relevant action:
 | `references/ticket-templates.md` | WRITE, REWRITE, DECOMPOSE |
 | `references/assessment-framework.md` | ASSESS, REWRITE |
 | `references/qa-scenario-guide.md` | QA SCENARIOS |
-| `references/ba-principles.md` | WRITE, REWRITE, any time you produce ticket content |
+| `references/ba-principles.md` | WRITE, REWRITE, SUMMARISE, any time you produce ticket content |
 | `references/planner-guide.md` | PLAN (Planner Mode) |
