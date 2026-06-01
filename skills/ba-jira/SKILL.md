@@ -15,14 +15,16 @@ This skill handles both Jira tickets and GitHub issues. It works in two modes:
 
 ## Step 1 — Load Profile
 
-Walk up from CWD to `.git/` looking for `.ba-tickets.json`.
+Detect the current repo name:
+```bash
+basename $(git rev-parse --show-toplevel)
+```
 
-**If found:**
-- Read `.ba-tickets.json` to get `project`, `repo`, and `contextPath`
-- Load `<contextPath>/<project>/profile.md`
-- Use the profile for all subsequent steps
+Then load `~/.claude/ba-tickets/<repo-name>/profile.md`.
 
-**If not found:**
+**If profile exists:** load it and proceed.
+
+**If profile does not exist:**
 - Enter SETUP MODE: read `references/profile-format.md` and follow the full setup flow
 - Do not proceed until the profile is created and loaded
 

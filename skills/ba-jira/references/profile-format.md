@@ -1,57 +1,42 @@
 # Profile Format & Setup Flow
 
-This file defines how per-project ticket system profiles are created, stored, and used by the ba-jira skill.
+This file defines how per-repo ticket system profiles are created, stored, and used by the ba-jira skill.
 
 ---
 
-## File Locations
+## File Location
 
-### Per-repo registration (tracked in git)
+Profiles live globally, outside any repo:
+
 ```
-<repo-root>/.ba-tickets.json
+~/.claude/ba-tickets/<repo-name>/profile.md
 ```
 
-### Per-project profile (global, outside the skill)
-```
-~/.claude/ba-tickets/<project-slug>/profile.md
-```
+The `<repo-name>` is derived from the current repo at runtime — no file is written into the repo itself.
 
 ---
 
-## `.ba-tickets.json` Schema
+## Detecting the Repo Name
 
-Created at the repo root during SETUP MODE. One file per repo, tracked in git.
-
-```json
-{
-  "project": "probuy",
-  "repo": "integration-api",
-  "contextPath": "~/.claude/ba-tickets"
-}
+Run:
+```bash
+basename $(git rev-parse --show-toplevel)
 ```
 
-| Field | Purpose |
-|-------|---------|
-| `project` | Identifies the shared project profile. Multiple repos share one profile. |
-| `repo` | Current repo name — used by Planner Mode to scope codebase exploration. |
-| `contextPath` | Base directory for profiles. Default: `~/.claude/ba-tickets` |
+This gives the repo directory name (e.g. `integration-api`, `instance-front-end`). If no git repo is found, ask the user for a name to use.
 
 ---
 
 ## `profile.md` Schema
 
-One file per project. Stores global, stable ticket system configuration. Never stores time-bound state (sprint names, sprint IDs, active assignees, current counts).
+One file per repo. Stores global, stable ticket system configuration. Never stores time-bound state (sprint names, sprint IDs, active assignees, current counts).
 
 ```markdown
 ---
-project: <project-slug>
+repo: <repo-name>
 source: jira          # jira | github | both
 configured: YYYY-MM-DD
 ---
-
-## Registered Repos
-- <repo-name> (registered YYYY-MM-DD)
-- <repo-name> (registered YYYY-MM-DD)
 
 ## Jira Config
 Site: <site>.atlassian.net
@@ -86,23 +71,17 @@ Labels: <label1>, <label2>, <label3>
 
 ## SETUP MODE Flow
 
-Triggered when no `.ba-tickets.json` is found walking up from CWD to `.git/`.
+Triggered when no profile exists at `~/.claude/ba-tickets/<repo-name>/profile.md`.
 
-### Step 1 — Detect project name
-Walk up from CWD to `.git/`. Use the parent directory name as the default project slug. Ask the user to confirm or change it.
+### Step 1 — Detect repo name
+Run `basename $(git rev-parse --show-toplevel)` to get the repo name.
 
 ### Step 2 — Check for existing profile
-Check if `~/.claude/ba-tickets/<project>/profile.md` already exists.
+Check if `~/.claude/ba-tickets/<repo-name>/profile.md` already exists.
 
-**If profile exists (another repo already registered):**
-- Skip all discovery steps
-- Just append this repo to "Registered Repos" in the profile
-- Write `.ba-tickets.json` at repo root
-- Tell user: "Registered [repo] under project [project] — profile already configured ([source])."
-- Done.
+**If profile exists:** Load it and proceed — no setup needed.
 
-**If profile does not exist (first repo in this project):**
-- Proceed to Steps 3–6.
+**If profile does not exist:** Proceed to Steps 3–5.
 
 ### Step 3 — Check for legacy jira-config.md
 Check if `skills/ba-jira/references/jira-config.md` exists and has `Status: CONFIGURED`.
@@ -123,7 +102,7 @@ Run these checks:
 - **GitHub:** Run `gh repo view --json name,owner,url,defaultBranchRef` — if successful, GitHub is available
 - **Jira:** Check if Atlassian MCP tools respond (try `getVisibleJiraProjects`) — if successful, Jira is available
 
-If both available → ask: "This project uses which ticket system(s)? Jira / GitHub / Both"
+If both available → ask: "This repo uses which ticket system(s)? Jira / GitHub / Both"
 If only one → confirm with user before proceeding.
 
 ### Step 5 — Run Jira discovery (only if Jira selected and no legacy config)
@@ -138,8 +117,7 @@ Run:
 1. `gh repo view --json name,owner,url,defaultBranchRef` — get owner, repo, default branch
 2. `gh label list --json name` — get available labels
 
-### Step 7 — Write files
-1. Create `~/.claude/ba-tickets/<project>/` directory
+### Step 7 — Write profile
+1. Create `~/.claude/ba-tickets/<repo-name>/` directory if it doesn't exist
 2. Write `profile.md` using the schema above
-3. Write `.ba-tickets.json` at repo root
-4. Confirm to user: "Profile created for project [project] ([source]: [summary]). All repos in this project can register by adding .ba-tickets.json pointing here."
+3. Confirm to user: "Profile created for [repo-name] ([source]: [summary])."

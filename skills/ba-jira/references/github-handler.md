@@ -177,7 +177,7 @@ Read `references/planner-guide.md` before starting.
 3. If the issue has no acceptance criteria or is too vague, pause — offer to run ASSESS or REWRITE first.
 
 #### Phase 2 — Understand the Codebase
-Use the `repo` field from `.ba-tickets.json` to confirm which repo you're in. Explore the codebase to ground the plan in reality.
+Use the repo name derived from `basename $(git rev-parse --show-toplevel)` to confirm which repo you're in. Explore the codebase to ground the plan in reality.
 
 Use file and search tools to understand:
 - Project structure, major modules, entry points
