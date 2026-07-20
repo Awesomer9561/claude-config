@@ -15,18 +15,25 @@ This skill handles both Jira tickets and GitHub issues. It works in two modes:
 
 ## Step 1 — Load Profile
 
-Detect the current repo name:
+Repos that belong to the same project share one ticket system, so they share one profile.
+Resolve in this order and stop at the first hit:
+
 ```bash
-basename $(git rev-parse --show-toplevel)
+ROOT=$(git rev-parse --show-toplevel)
+basename "$ROOT"                                    # repo name
+cat "$ROOT/.crossrepo.json" 2>/dev/null             # project family, if any
 ```
 
-Then load `~/.claude/ba-tickets/<repo-name>/profile.md`.
+1. **Repo override** — `~/.claude/ba-tickets/<repo-name>/profile.md`, if it exists.
+   Only ever created by hand, for a repo that genuinely differs from its family.
+2. **Project family** — if `.crossrepo.json` exists, read its `project` field and load
+   `~/.claude/ba-tickets/_projects/<project>/profile.md`. This is the normal path.
+3. **Neither** — enter SETUP MODE: read `references/profile-format.md` and follow the full setup flow.
+   Do not proceed until a profile is created and loaded.
 
-**If profile exists:** load it and proceed.
-
-**If profile does not exist:**
-- Enter SETUP MODE: read `references/profile-format.md` and follow the full setup flow
-- Do not proceed until the profile is created and loaded
+**Never create a per-repo profile for a repo that has a `.crossrepo.json` project family.**
+Doing so forks config that is supposed to be shared, and the copies drift. If a family
+profile needs a change, edit the family profile — every sibling repo picks it up.
 
 ---
 
