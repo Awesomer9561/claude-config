@@ -1,6 +1,6 @@
 # Ticket Templates
 
-All templates are written in business language. No technical jargon. Every section must be filled meaningfully — a template with placeholder text is not a finished ticket.
+All templates are written in business language unless the type is developer-oriented (Sub-task). No placeholder text — every section must be filled meaningfully before the ticket is ready.
 
 When applying a template, adapt the sections to match the available fields in `jira-config.md` for the relevant issue type. If a standard template section does not have a corresponding Jira field, include it in the Description body.
 
@@ -10,59 +10,22 @@ When applying a template, adapt the sections to match the available fields in `j
 
 > Use for: a new capability or behaviour that a user needs to be able to perform
 
-**Title format:** `As a [user type], I can [do something] so that [benefit]`
-Example: `As a customer, I can reset my password from the login screen so that I can regain access without contacting support`
+**Title format:** `[Module] - [Feature] - [Short Description]`
+Example: `Authentication - Password Reset - Allow users to recover access without contacting support`
 
 ---
 
-**Background / Context**
-What is the broader situation this story sits within? What triggered the need for this? Keep it to 2–4 sentences that anyone unfamiliar with the feature could understand.
+As a [role],
+I want [goal],
+So that [benefit].
 
-**Problem Statement**
-What is the user currently unable to do, or what friction are they experiencing? Be specific about what goes wrong or what is missing today.
+[Module]>[SubModule]>[Feature]:
 
-**Business Value**
-Why does this matter to the business? What outcome does it drive — customer satisfaction, revenue, efficiency, compliance, retention? Be explicit.
+**Acceptance Criteria:**
 
-**Who is Affected**
-Which user groups, teams, or departments are impacted by this change? (e.g. "All existing customers who have forgotten their password", "The customer support team who currently handle these requests manually")
-
-**In Scope**
-A clear list of what this story covers. Use plain sentences, not bullet fragments.
-- Example: "The user can request a password reset by entering their registered email address"
-- Example: "The user receives an email with a secure reset link within 2 minutes"
-- Example: "The link expires after 30 minutes"
-
-**Out of Scope**
-What is deliberately not being addressed in this story to keep it focused?
-- Example: "Changes to the email template design are not included"
-- Example: "Password strength rules are not being changed"
-
-**Acceptance Criteria**
-Numbered list. Each criterion must be independently verifiable by someone with no technical knowledge. Written in plain English.
-
-1. Given [situation], when [action], then [outcome]
-2. Given [situation], when [action], then [outcome]
+1. [Plain statement — independently verifiable by someone with no technical knowledge]
+2. [Plain statement]
 3. ...
-
-**Business Rules**
-Any rules that govern the behaviour described. These are decisions the business has made that QA needs to be aware of.
-- Example: "A reset link can only be sent once every 5 minutes per email address"
-- Example: "Unverified email addresses cannot request a reset"
-
-**Dependencies**
-Are there other tickets, teams, or external factors this story relies on before it can be completed?
-- Example: "Requires the email notification service to be active — see [TICKET-KEY]"
-- If none: "No dependencies identified"
-
-**Definition of Done**
-When can this story be closed? What must be true for it to be considered finished?
-- Acceptance criteria have all passed in the test environment
-- QA sign-off received
-- [Any other business-specific conditions]
-
-**Priority Justification**
-Why is this priority level appropriate? What is the business consequence of delaying it?
 
 ---
 
@@ -70,51 +33,30 @@ Why is this priority level appropriate? What is the business consequence of dela
 
 > Use for: something that is broken, behaving incorrectly, or not matching what was agreed
 
-**Title format:** `[What is broken] — [brief description of the wrong behaviour]`
-Example: `Password reset email — link not delivered to Gmail addresses`
+**Title format:** `[Module] - [Feature] - [Issue]`
+Example: `Authentication - Password Reset - Reset email not delivered to Gmail addresses`
 
 ---
 
-**What is Happening**
-Describe what the user experiences when they encounter this issue. Write it as if explaining to someone who wasn't there. Be specific about the exact incorrect behaviour.
+[Description paragraph — what the user experiences when they encounter this issue. Written so someone who wasn't there can understand the problem clearly.]
 
-**What Should Happen**
-Describe the correct, expected behaviour. Reference the original acceptance criteria or agreed behaviour if known.
+**Steps to Reproduce**
 
-**Who is Affected**
-Which users or user groups are experiencing this? Is it everyone, or a specific segment?
-- Example: "Any user with a Gmail address who attempts to reset their password"
+1. [Action]
+2. [Action]
+3. ...
 
-**Business Impact**
-What is the real-world consequence of this bug? Is anyone being blocked from doing their job? Is revenue, compliance, or customer satisfaction at risk?
-- Example: "Affected users cannot log in and are being directed to support, increasing ticket volume"
+**Actual Result**
 
-**How to Reproduce (Business Steps)**
-The sequence of actions a user takes to encounter this bug — written as a user journey, not technical steps.
+> Only include this section when the actual behaviour can be confirmed with certainty. Skip it entirely if uncertain.
 
-1. User goes to the login screen and clicks "Forgot password"
-2. User enters their Gmail address and submits
-3. User does not receive the reset email after 10 minutes
-4. User checks spam — email is not there either
+* [What the system does]
 
-**How Often Does This Happen**
-Is this consistent (happens every time), intermittent (sometimes), or hard to reproduce?
+**Expected Result**
 
-**Severity**
-How serious is this? Use business impact to justify:
-- **Critical** — completely blocks a core user journey or has a compliance/financial risk
-- **High** — significantly degrades a key user journey; no workaround exists
-- **Medium** — causes inconvenience but a workaround is available
-- **Low** — minor cosmetic or edge case issue with minimal user impact
+> Only include this section when the expected behaviour can be confirmed with certainty. Skip it entirely if uncertain.
 
-**Acceptance Criteria for the Fix**
-How will we know the bug has been resolved?
-
-1. Given a user with a Gmail address submits a password reset request, they receive the reset email within 2 minutes
-2. The received email contains a working reset link
-
-**Dependencies**
-Any related tickets or known factors that may be connected to this bug.
+* [What the system should do]
 
 ---
 
@@ -122,89 +64,62 @@ Any related tickets or known factors that may be connected to this bug.
 
 > Use for: a large body of work that represents a significant business outcome, made up of multiple child stories
 
-**Title format:** A clear business objective
-Example: `Enable customers to self-serve password and account security changes`
+**Title format:** `[Module] - [Initiative] - [Goal]`
+Example: `Authentication - Account Security - Enable customers to self-serve all password and security changes`
 
 ---
 
-**Business Objective**
-What is the business trying to achieve with this epic? What problem does it solve at a strategic level? Write 3–5 sentences that a non-technical stakeholder or senior leader could read and immediately understand.
+[Business objective — 2–3 sentences a non-technical stakeholder can read and immediately understand. What problem does this solve and what does the business gain?]
 
-**Success Vision**
-When this epic is fully delivered, what does the world look like? What can users do that they couldn't before? What does the business gain?
+[Module]>[Initiative]:
 
-**Who Benefits**
-Which user groups, departments, or stakeholders benefit from the delivery of this epic?
+**In Scope:**
+- [What this epic covers]
 
-**Scope Overview**
-At a high level, what does this epic cover? (Child stories will define the detail)
+**Out of Scope:**
+- [What is deliberately excluded to keep the epic focused]
 
-**What is Out of Scope for this Epic**
-What has been deliberately excluded so the epic stays focused?
-
-**Business Value & Priority**
-Why is this epic important now? What is the cost of not doing it? Link to any strategic goals, OKRs, or business drivers if known.
-
-**Assumptions**
-What assumptions are we making that would change the scope if proven wrong?
-
-**Known Dependencies**
-What does this epic depend on — other epics, teams, third-party services, or business decisions?
-
-**Success Metrics**
-How will the business measure whether this epic was successful once delivered?
-- Example: "Self-serve password reset usage reaches 80% within 3 months of launch, reducing support tickets by 40%"
-
-**Child Stories**
-[To be broken down — use the DECOMPOSE action]
+**Success Criteria:**
+1. [Measurable outcome the business will use to judge success]
+2. ...
 
 ---
 
 ## Task
 
-> Use for: a specific piece of work that is not a user-facing story but needs to be tracked — internal process, configuration, documentation, investigation
+> Use for: a specific piece of work that is not a user-facing story but needs to be tracked — internal process, configuration, documentation, investigation. Can be written in business or developer language depending on the nature of the work.
 
-**Title format:** Clear action — what needs to be done
-Example: `Update user-facing error messages for the password reset flow to match agreed wording`
+**Title format:** `[Module] - [Feature] - [Task Description]`
+Example: `Authentication - Password Reset - Update user-facing error messages to match agreed wording`
 
 ---
 
-**What Needs to Be Done**
-A clear, specific description of the work. Written so that the person picking it up knows exactly what is expected.
+[What needs to be done — clear and specific enough that the person picking it up knows exactly what is expected. Use business or technical language as appropriate.]
 
-**Why This Is Needed**
-The business or process reason this task exists. What breaks or is missing if it isn't done?
+[Module]>[Feature]:
 
-**Who Owns It**
-Which team or person is responsible?
-
-**Acceptance Criteria**
-How will we know this task is complete?
-
+**Acceptance Criteria:**
 1. [Specific verifiable outcome]
-
-**Dependencies**
-Anything this task is waiting on, or anything that is waiting on this task.
+2. ...
 
 ---
 
 ## Sub-task
 
-> Use for: a specific piece of work that is part of a parent story or task
+> Use for: a specific piece of work that is part of a parent story or task. Developer-oriented — technical language is appropriate here.
 
-**Title format:** Clear action — specific to the parent
-Example: `Write QA scenarios for the password reset happy path`
+**Title format:** `[Module] - [Feature] - [Specific Task]`
+Example: `Authentication - Password Reset - Write QA scenarios for the password reset happy path`
 
 ---
 
-**Parent Ticket**
-[Link to parent]
+[Specific technical description of this sub-task's scope. Smaller and more focused than the parent.]
 
-**What Needs to Be Done**
-Specific description of this sub-task's scope. It should be smaller and more focused than the parent.
+**Parent:** [TICKET-KEY]
 
-**Acceptance Criteria**
-1. [Specific verifiable outcome]
+**Acceptance Criteria:**
+1. [Technical verifiable outcome]
+2. ...
 
 ---
 
@@ -212,29 +127,27 @@ Specific description of this sub-task's scope. It should be smaller and more foc
 
 > Use for: a time-boxed investigation to answer a specific question before a story can be properly defined or estimated
 
-**Title format:** `Spike: [question to answer]`
-Example: `Spike: Understand what options exist for delivering password reset emails to users`
+**Title format:** `[Module] - [Feature] - Spike: [What to Investigate]`
+Example: `Authentication - Password Reset - Spike: Understand options for delivering transactional emails to users`
 
 ---
 
-**The Question We Need to Answer**
-What specific question is this spike trying to resolve? Be precise — a vague question produces a vague outcome.
+[The specific question this spike is trying to resolve. Be precise — a vague question produces a vague outcome.]
 
-**Why We Need to Know**
-What decision or story is blocked until we have this answer?
+[Module]>[Feature]:
 
-**What We Will Produce**
-What is the output of this spike? A recommendation? A written summary? A set of defined options?
-- Example: "A summary of 2–3 options with the trade-offs written up in plain language so the team can choose an approach"
+**Why this matters:**
+[What decision or story is blocked until we have this answer.]
 
-**Time Box**
-How long should be spent on this investigation before stopping and reporting findings?
-- Example: "No more than 3 days"
+**Output:**
+[What the spike will produce — a recommendation, a written summary, a set of defined options with trade-offs.]
 
-**Acceptance Criteria**
-1. A written summary of findings has been shared with the team
+**Time Box:** [e.g. 3 days]
+
+**Acceptance Criteria:**
+1. Findings have been written up and shared with the team
 2. A recommended approach has been identified (or it has been clearly documented why one cannot be recommended yet)
-3. Next steps / follow-on stories have been proposed
+3. Follow-on stories have been proposed
 
 ---
 
@@ -256,35 +169,26 @@ How long should be spent on this investigation before stopping and reporting fin
 
 > Use for: any GitHub issue — feature requests, bugs, tasks, and investigations
 
-**Title format:** `[Verb] [Object] — [Outcome]`
+**Title format:** `[Module] - [Feature] - [Short Description]`
 Examples:
-- `Add password reset — allow users to recover access without support`
-- `Fix email delivery — ensure Gmail addresses receive reset links`
-- `Investigate: options for delivering transactional emails`
+- `Authentication - Password Reset - Allow users to recover access without support`
+- `Orders - Payment - Fix duplicate charge on retry`
+- `Reporting - Export - Spike: Investigate CSV generation options`
 
 ---
 
-**Overview**
-What is the broader situation this issue sits within? What triggered the need for it? Keep it to 2–3 sentences that anyone unfamiliar with the feature could understand.
+[Overview — 2–3 sentences that anyone unfamiliar with the feature could understand. What triggered the need for this?]
 
-**Problem / Need**
-What is the user currently unable to do, or what is broken or missing? Be specific about what goes wrong or what is absent today.
+[Module]>[Feature]:
 
-**Business Value**
-Why does this matter? What outcome does it drive — customer satisfaction, revenue, efficiency, compliance, retention? Be explicit.
+**What needs to happen:**
+- [ ] [Acceptance criterion]
+- [ ] [Acceptance criterion]
 
-**What needs to happen**
-A clear list of what this issue covers, written as testable acceptance criteria:
+**Out of scope:**
+- [What is deliberately not being addressed to keep this focused]
 
-- [ ] Given [situation], when [action], then [outcome]
-- [ ] Given [situation], when [action], then [outcome]
-
-**Out of scope**
-What is deliberately not being addressed in this issue to keep it focused?
-- Example: "Changes to the email template design are not included"
-
-**Notes / Dependencies**
-Any related issues, external dependencies, or context the person picking this up should know:
+**Notes / Dependencies:**
 - Related: #[number]
 - Blocked by: #[number]
 - If none: "No dependencies identified"
@@ -293,9 +197,9 @@ Any related issues, external dependencies, or context the person picking this up
 
 ## Choosing the Right GitHub Issue Type
 
-| Situation | Title starts with |
-|-----------|-----------------|
-| New user capability | `Add`, `Enable`, `Allow` |
-| Something is broken | `Fix` |
-| Investigation needed | `Investigate:` or `Spike:` |
-| Internal/process work | `Update`, `Remove`, `Migrate` |
+| Situation | Title contains |
+|-----------|----------------|
+| New user capability | `[Module] - [Feature] - [Short Description]` |
+| Something is broken | `[Module] - [Feature] - Fix: [Issue]` |
+| Investigation needed | `[Module] - [Feature] - Spike: [What to investigate]` |
+| Internal/process work | `[Module] - [Feature] - [Task Description]` |
