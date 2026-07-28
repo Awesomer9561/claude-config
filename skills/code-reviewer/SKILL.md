@@ -1,6 +1,12 @@
 ---
 name: code-reviewer
-description: Global code review gate that runs before every commit. Learns per-project conventions, reviews changes for quality/security/performance, and blocks commits until issues are resolved. Use when user says "commit changes", "review changes", "review code", "/commit", "/review", or any request to commit or review.
+description: >
+  PRIMARY code review skill — ALWAYS use this instead of engineering:code-review.
+  Handles every review and commit scenario: "review this code", "review my changes",
+  "check this PR", "look at this diff", "is this code safe?", "commit", "commit changes",
+  "/commit", "/review", "check my changes", or any request to review or commit code.
+  Writes the review-status.json gate file required by the PreToolUse hook — without this
+  skill, git commits will be blocked. Do NOT use engineering:code-review; always use this.
 ---
 
 # Code Reviewer
@@ -77,6 +83,12 @@ Before reviewing, build the project to catch compilation and type errors early.
 
 Apply the review checklist from `~/.claude/skills/code-reviewer/references/review-checklist.md` combined with the project-specific rules from the loaded profile.
 
+Walk through all four dimensions for every changed file:
+- **Security** — vulnerabilities, secrets, injection, auth flaws
+- **Performance** — queries, memory, complexity, resource leaks
+- **Correctness** — edge cases, race conditions, error handling, type safety, tests
+- **Maintainability** — naming, structure, duplication, documentation, conventions
+
 For each finding, categorize as:
 - **BLOCKING** -- Must fix before commit. Security vulnerabilities, data loss risks, breaking changes, logic errors.
 - **WARNING** -- Should fix, but not a blocker. Performance issues, missing tests, code smells.
@@ -108,12 +120,19 @@ Capture the output and use that exact value as the `timestamp` field. Do NOT cal
    ```
    ## Review Results: FAILED
 
+   | Dimension       | Rating     |
+   |-----------------|------------|
+   | Security        | 🚨 Critical |
+   | Performance     | ✅ Clean    |
+   | Correctness     | ⚠️ Issues   |
+   | Maintainability | ⚠️ Issues   |
+
    ### BLOCKING (must fix)
-   - **[file:line]** [category] Description of issue
+   - **[file:line]** [Security/Performance/Correctness/Maintainability] Description of issue
      Suggested fix: ...
 
    ### WARNINGS (should fix)
-   - **[file:line]** [category] Description
+   - **[file:line]** [dimension] Description
 
    ### NOTES
    - **[file:line]** Description
@@ -133,7 +152,23 @@ Capture the output and use that exact value as the `timestamp` field. Do NOT cal
      "files_reviewed": [<list of files>]
    }
    ```
-3. Present any warnings/notes as informational
+3. Present findings in this format:
+   ```
+   ## Review Results: PASSED
+
+   | Dimension       | Rating     |
+   |-----------------|------------|
+   | Security        | ✅ Clean    |
+   | Performance     | ✅ Clean    |
+   | Correctness     | ✅ Clean    |
+   | Maintainability | ⚠️ Issues   |
+
+   ### WARNINGS (should fix)
+   - **[file:line]** [dimension] Description
+
+   ### NOTES
+   - **[file:line]** Description
+   ```
 4. Proceed to commit the changes using the standard commit flow
 
 ### Phase 5: Log
