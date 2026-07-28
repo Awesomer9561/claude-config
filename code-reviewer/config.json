@@ -1,5 +1,5 @@
 {
-  "review_ttl_minutes": 10,
+  "review_ttl_minutes": 60,
   "bypass_patterns": ["WIP:", "wip:", "fixup!", "squash!"],
   "severity_levels": {
     "blocking": ["security", "data_loss", "breaking_change", "logic_error"],
