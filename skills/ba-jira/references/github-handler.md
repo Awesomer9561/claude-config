@@ -22,24 +22,39 @@ Offer: "Want me to assess this, improve it, or write QA scenarios for it?"
 
 ## Action: WRITE
 
-Read `references/ticket-templates.md` for the GitHub Issue Template.
+Read `references/ticket-templates.md` for the appropriate template.
 Read `references/ba-principles.md` before writing.
 
 1. Identify issue type from context: bug, feature/enhancement, spike, task (ask if unclear)
-2. Ask targeted clarifying questions if key information is missing
-3. Draft the issue using the GitHub Issue Template from `references/ticket-templates.md`
-4. Show the draft to the user for review
-5. On confirmation, run:
+2. Ask targeted clarifying questions if key information is missing — one focused question at a time
+3. Apply the correct template from `references/ticket-templates.md`:
+
+   | Issue Type         | Template to use |
+   |--------------------|----------------|
+   | Feature/Enhancement | User Story template |
+   | Bug                | Bug Report template |
+   | Spike              | Spike template |
+   | Task               | Task template |
+
+   > GitHub issues use a single unified format (the GitHub Issue Template) regardless of type. When the type implies a Jira-style template (User Story, Bug, etc.), use that template's **body structure** but always write the title using the GitHub Issue title format: `[Module] - [Feature] - [Short Description]`.
+
+4. Use the title format: `[Module] - [Feature] - [Short Description]`
+   - Bugs: `[Module] - [Feature] - [Issue]`
+   - Spikes: `[Module] - [Feature] - Spike: [What to Investigate]`
+5. Fill every section of the template — no placeholder text
+6. Show the draft to the user for review
+7. On confirmation, run:
    ```bash
    gh issue create --title "<title>" --body "<body>" [--label "<label>"] [--assignee "<user>"]
    ```
-6. Report the created issue number and URL to the user
+8. Report the created issue number and URL to the user
 
 **Minimum info needed before writing:**
-- Who is the user / stakeholder affected?
-- What do they need to be able to do?
-- What is the business reason / value?
-- What does "done" look like to the business?
+- What module / area of the product does this relate to?
+- What is the specific feature or flow affected?
+- For features: who is the user, what do they need, and why?
+- For bugs: what happened, steps to reproduce
+- What does "done" look like?
 
 ---
 
@@ -142,23 +157,9 @@ Read `references/ba-principles.md` before composing.
 
 ```
 ## ✅ Implementation Summary
-
-**Issue:** #[NUMBER] — [Title]
-**Summary date:** [Today's date]
-
----
-
-### What was delivered
-
-[2–4 sentences in plain English describing what the user can now do, what was fixed, or what changed. Written from the end user or business perspective. No code references, no API names, no database terms.]
-
-### What to verify
-
-[Bullet list of 2–5 things a QA tester or stakeholder should check. Written as actions: "Navigate to X and confirm Y", "Try doing Z and check that…". No technical steps.]
-
-### Scope of change
-
-[One sentence on what was deliberately left out of scope, if relevant. Omit entirely if everything was delivered.]
+- [Plain-English change, written from the end user or business perspective]
+- [Second change, if any]
+- [3–5 bullets max. No code references, no API names, no database terms.]
 ```
 
 **Language Rules:**
