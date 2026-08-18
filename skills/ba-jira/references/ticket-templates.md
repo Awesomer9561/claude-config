@@ -29,6 +29,29 @@ So that [benefit].
 
 ---
 
+## Enhancement
+
+> Use for: improving or extending an existing capability (not building from scratch)
+
+**Title format:** `[Module] - [Feature] - [Short Description]`
+Example: `Integration API - Checkout - Look up a checkout using the supplier's own order reference`
+
+---
+
+[Context — 1–2 sentences max: what gap or limitation does this address?]
+
+[Module]>[Feature]:
+
+**Acceptance Criteria:**
+
+1. [Plain statement — independently verifiable by someone with no technical knowledge]
+2. ...
+
+**Out of Scope:**
+- [What is deliberately not changing]
+
+---
+
 ## Bug Report
 
 > Use for: something that is broken, behaving incorrectly, or not matching what was agreed
@@ -38,7 +61,7 @@ Example: `Authentication - Password Reset - Reset email not delivered to Gmail a
 
 ---
 
-[Description paragraph — what the user experiences when they encounter this issue. Written so someone who wasn't there can understand the problem clearly.]
+[1–2 sentences: what the user experiences when they hit this issue]
 
 **Steps to Reproduce**
 
@@ -69,7 +92,7 @@ Example: `Authentication - Account Security - Enable customers to self-serve all
 
 ---
 
-[Business objective — 2–3 sentences a non-technical stakeholder can read and immediately understand. What problem does this solve and what does the business gain?]
+[Business objective — 1–2 sentences: what problem does this solve and what does the business gain?]
 
 [Module]>[Initiative]:
 
@@ -94,7 +117,7 @@ Example: `Authentication - Password Reset - Update user-facing error messages to
 
 ---
 
-[What needs to be done — clear and specific enough that the person picking it up knows exactly what is expected. Use business or technical language as appropriate.]
+[1–2 sentences: what needs to be done and why]
 
 [Module]>[Feature]:
 
@@ -113,7 +136,7 @@ Example: `Authentication - Password Reset - Write QA scenarios for the password 
 
 ---
 
-[Specific technical description of this sub-task's scope. Smaller and more focused than the parent.]
+[1–2 sentences: what this sub-task covers]
 
 **Parent:** [TICKET-KEY]
 
@@ -132,7 +155,7 @@ Example: `Authentication - Password Reset - Spike: Understand options for delive
 
 ---
 
-[The specific question this spike is trying to resolve. Be precise — a vague question produces a vague outcome.]
+[1–2 sentences: the specific question this spike must answer]
 
 [Module]>[Feature]:
 
@@ -177,7 +200,7 @@ Examples:
 
 ---
 
-[Overview — 2–3 sentences that anyone unfamiliar with the feature could understand. What triggered the need for this?]
+[1–2 sentences: what triggered the need for this]
 
 [Module]>[Feature]:
 

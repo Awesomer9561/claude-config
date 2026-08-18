@@ -8,25 +8,31 @@ The goal: any ticket written by this skill should be fully understood by a non-t
 
 ## The Core Rules
 
-### 1. Write for the Reader, Not the Writer
+### 1. Be Brief — Let the Acceptance Criteria Do the Work
+
+The description or context section of any ticket is capped at **1–2 sentences**. Its only job is to name the gap or situation the ticket addresses. The Acceptance Criteria carry all the detail.
+
+Do not re-narrate what the ACs already say. If you are writing a third sentence of context, stop — either it repeats the ACs, or the ticket needs to be split.
+
+### 2. Write for the Reader, Not the Writer
 The person writing a ticket already knows what they mean. The job of the ticket is to communicate that meaning to someone who wasn't in the meeting, didn't hear the conversation, and has no assumed context. Write for that person.
 
-### 2. One Idea per Sentence
+### 3. One Idea per Sentence
 Long, compound sentences hide ambiguity. Break complex thoughts into short, clear sentences. If a sentence contains "and" more than once, it probably needs to be split.
 
-### 3. Say What Happens, Not How It Happens
+### 4. Say What Happens, Not How It Happens
 Business requirements describe the outcome the user experiences. They do not describe the method used to achieve it. "The user receives a confirmation email" is a requirement. "An SMTP service triggers a templated email via the notification microservice" is an implementation detail — it belongs in engineering notes, not in a Jira ticket.
 
-### 4. State the Why, Not Just the What
+### 5. State the Why, Not Just the What
 Every ticket should answer: why are we doing this? What happens if we don't? A ticket without a stated business reason cannot be properly prioritised or challenged — and cannot be properly tested.
 
-### 5. If It Cannot Be Tested, It Is Not a Requirement
+### 6. If It Cannot Be Tested, It Is Not a Requirement
 Any acceptance criterion that cannot be verified by a QA tester without a developer's help is not a proper acceptance criterion. Rewrite it until it is observable and specific.
 
-### 6. Never Assume Shared Understanding
+### 7. Never Assume Shared Understanding
 Do not write "as per the usual process", "standard behaviour", "as discussed", or "as agreed". The ticket must stand alone. Anyone reading it cold — including future team members, auditors, or stakeholders — must be able to understand it fully.
 
-### 7. Empty Fields Are Not Neutral
+### 8. Empty Fields Are Not Neutral
 A blank "Dependencies" field does not mean "no dependencies" — it means "nobody checked". Always explicitly state "No dependencies identified" if that is the case. Intentional emptiness must be intentional, not accidental.
 
 ---

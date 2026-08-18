@@ -31,19 +31,32 @@ If the user says "refresh Jira config", "resync Jira", or "update Jira settings"
 Read `references/ticket-templates.md` for the appropriate template.
 Read `references/ba-principles.md` before writing.
 
-1. Identify the issue type from context (ask if unclear)
+1. Identify the issue type from context (ask if unclear): User Story, Bug, Epic, Task, Sub-task, or Spike
 2. Ask targeted clarifying questions if key information is missing — do not invent content. Ask one focused question at a time.
-3. Apply the correct template from `references/ticket-templates.md`
-4. Write the full ticket in BA language
-5. Show the drafted ticket to the user for review
-6. On confirmation, call `createJiraIssue` with appropriate field mappings from the profile
-7. Report the created issue key back to the user
+3. Apply the correct template from `references/ticket-templates.md` for that issue type:
+
+   | Issue Type | Template to use |
+   |------------|----------------|
+   | User Story | User Story template |
+   | Bug        | Bug Report template |
+   | Epic       | Epic template |
+   | Task       | Task template |
+   | Sub-task   | Sub-task template |
+   | Spike      | Spike template |
+
+4. Use the title format from the template: `[Module] - [Feature] - [Short Description]` (varies slightly by type — see template)
+5. Fill every section of the template — no placeholder text
+6. Show the drafted ticket to the user for review
+7. On confirmation, call `createJiraIssue` with appropriate field mappings from the profile
+8. Report the created issue key back to the user
 
 **Minimum info needed before writing:**
-- Who is the user / stakeholder affected?
-- What do they need to be able to do?
-- What is the business reason / value?
-- What does "done" look like to the business?
+- What module / area of the product does this relate to?
+- What is the specific feature or flow affected?
+- For User Stories: who is the user, what do they need, and why?
+- For Bugs: what happened, what should have happened, steps to reproduce
+- For Epics/Spikes: what is the business objective or question to answer?
+- What does "done" look like?
 
 ---
 
@@ -80,8 +93,9 @@ For epic breakdown:
 3. Produce a set of child user stories, each:
    - Independently deliverable
    - Carrying clear business value on its own
-   - Written in user story format: *As a [person], I want [goal], so that [benefit]*
-   - With draft acceptance criteria
+   - Titled using the User Story format: `[Module] - [Feature] - [Short Description]`
+   - Body using the User Story template: narrative (As a… / I want… / So that…) + navigation breadcrumb + numbered Acceptance Criteria
+   - Acceptance criteria written as plain numbered statements (no Given/When/Then)
    - Sized appropriately (flag any that feel too large)
 4. Present all proposed stories for review
 5. On confirmation, call `createJiraIssue` for each story and link them to the parent epic
@@ -139,38 +153,41 @@ Read `references/qa-scenario-guide.md` before writing scenarios.
 
 Write a business-oriented summary of what was implemented and post it as a Jira comment.
 
-Read `references/ba-principles.md` before composing.
+Read `references/ba-principles.md` before composing — comments follow the same "Be Brief" rule as tickets. A comment padded with template sections that restate the same fact in different words is a defect, not thoroughness: it buries the one detail (the actual before/after) that the reader needs.
 
 1. **Load the ticket** — call `getJiraIssue` to understand the original requirement. If no key provided, ask for one.
 2. **Gather what was built** — if the user hasn't described it, ask: "What was delivered? Describe what changed from a user's perspective."
-3. **Compose the summary** using the template below — no technical jargon.
-4. **Show for review** — display the full comment. Ask: "Shall I post this to [ticket-key]?"
-5. **Post** — on confirmation, call `addCommentToJiraIssue`.
+3. **Pick the template** — Copy/Text Change Template if the fix is to literal user-facing text (placeholders, labels, toast/error messages, tooltips); Standard Template for an actual feature, flow, or behaviour change. When unsure, prefer the shorter one — expand only if a short comment would leave out something the reader needs.
+4. **Compose the summary** using the chosen template — no technical jargon.
+5. **Show for review** — display the full comment. Ask: "Shall I post this to [ticket-key]?"
+6. **Post** — on confirmation, call `addCommentToJiraIssue`.
 
-### Summary Comment Template
+### Copy/Text Change Template (default for placeholder/label/message fixes)
+
+Lead with the actual strings, not a description of them — "each field now shows its own placeholder" tells the reader nothing that the table doesn't say better.
 
 ```
 ## ✅ Implementation Summary
 
-**Ticket:** [KEY] — [Title]
-**Summary date:** [Today's date]
+[One sentence: what was wrong.] Fixed — [one sentence: what's true now].
 
----
-
-### What was delivered
-
-[2–4 sentences in plain English describing what the user can now do, what was fixed, or what changed. Written from the end user or business perspective. No code references, no API names, no database terms.]
-
-### What to verify
-
-[Bullet list of 2–5 things a QA tester or stakeholder should check. Written as actions: "Navigate to X and confirm Y", "Try doing Z and check that…". No technical steps.]
-
-### Scope of change
-
-[One sentence on what was deliberately left out of scope, if relevant. Omit entirely if everything was delivered.]
+| Field/Screen | Before | After (EN) | After (AR) |
+|---|---|---|---|
+| [field] | [old text] | [new text] | [new text] |
 ```
 
-**Language Rules:**
+Drop the AR column entirely for English-only surfaces. Add rows, not sections, if more than one string changed.
+
+### Standard Template (features, flows, behaviour changes)
+
+```
+## ✅ Implementation Summary
+- [Plain-English change, written from the end user or business perspective]
+- [Second change, if any]
+- [3–5 bullets max. No code references, no API names, no database terms.]
+```
+
+**Language Rules (both templates):**
 - ✅ "users can now…", "the screen now shows…", "clicking [button] now…"
 - ❌ Never say: API, endpoint, database, query, migration, deployment, service, component, function, branch, PR, merge, commit, schema, payload, backend, frontend
 
