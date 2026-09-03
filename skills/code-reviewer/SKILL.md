@@ -83,6 +83,8 @@ Before reviewing, build the project to catch compilation and type errors early.
 
 Apply the review checklist from `~/.claude/skills/code-reviewer/references/review-checklist.md` combined with the project-specific rules from the loaded profile.
 
+**Review scope is the whole file, not just the diff.** For every file touched by the change — even if only a few lines were modified — walk the **entire file**, not only the changed hunks. Flag a real anti-pattern, bug, or convention violation anywhere in that file, including code the current change never touched. Pre-existing issues elsewhere in a file you're already editing are legitimate findings, not out of scope — report them exactly like any other finding (severity, file:line, fix suggestion), and note in the finding that the line predates this change if that's relevant context for the user. This does not relax "don't be pedantic": only flag real issues (bugs, security, performance, missing-test gaps, genuine convention violations) found anywhere in the file, not unrelated style nitpicks. Files you did not touch at all stay out of scope.
+
 Walk through all four dimensions for every changed file:
 - **Security** — vulnerabilities, secrets, injection, auth flaws
 - **Performance** — queries, memory, complexity, resource leaks
@@ -181,7 +183,7 @@ Run `date +%s000` if not already captured in this phase. Append a one-line JSON 
 ## Important Rules
 
 - **Never skip the review** when the user asks to commit. The PreToolUse hook at `~/.claude/hooks/code-review-gate.js` will block the commit anyway if review hasn't passed.
-- **Read full files**, not just diffs. Context matters for catching issues.
+- **Read and review full files**, not just diffs — for every touched file, findings can come from anywhere in the file, not only the changed lines. See "Review scope" in Phase 3.
 - **Be specific** in findings -- include file paths, line numbers, and concrete fix suggestions.
 - **Respect the project profile** -- don't flag things that are established conventions in the project.
 - **Don't be pedantic** -- focus on real issues, not style preferences (unless the project profile says otherwise).
